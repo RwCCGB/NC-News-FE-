@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getArticleById } from "../api";
+import { getArticleById, patchArticleVotesById } from "../api";
 import { formatDate } from "../Utils/formatDate";
 import Comments from "./Comments";
 
@@ -10,12 +10,20 @@ export default function ArticlePage() {
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
   const [showComments, setShowComments] = useState(true);
+  const [localVotes, setLocalVotes] = useState(0);
+  const [isVoting, setIsVoting] = useState(false)
 
   useEffect(() => {
     setStatus("loading");
     getArticleById(article_id)
-      .then((a) => { setArticle(a); setStatus("ready"); })
-      .catch((err) => { setError(err.message || "Unable to load article"); setStatus("error"); });
+      .then((article) => { 
+        setArticle(article)
+        setStatus("ready")
+    })
+      .catch((error) => { 
+        setError(error.message || "Unable to load article")
+        setStatus("error")
+    })
   }, [article_id]);
 
   if (status === "loading") {
@@ -29,7 +37,25 @@ export default function ArticlePage() {
   }
 
   const { title, topic, author, created_at, votes, body, article_img_url, comment_count } = article;
+  const displayVotes = (article?.votes ?? 0) + localVotes
 
+  async function handleVoteChange(vote){
+    if(!article || isVoting){
+        return
+    }
+    setLocalVotes((votes) => votes + vote)
+    setIsVoting(true)
+    try{
+        const updatedVote = await patchArticleVotesById(article_id, vote)
+        setArticle(updatedVote)
+        setLocalVotes(0)
+    }
+    catch(error){
+        setLocalVotes((votes) => votes - vote)
+        setError(error.message)
+    }
+    setIsVoting(false)
+  }
   return (
     <section className="container article-page">
       <div className="article-grid">
@@ -37,7 +63,10 @@ export default function ArticlePage() {
           <div className="article-header">
             <h1 className="article-title">{title}</h1>
             <div className="article-meta">
-              <span className="pill">Votes: {votes ?? 0}</span>
+              <span className="pill">Votes: {displayVotes}
+                <button onClick={()=> handleVoteChange(1)} disabled={isVoting}>👍 +</button>
+                <button onClick={()=> handleVoteChange(-1)} disabled={isVoting}>👎 -</button>
+              </span>
               <span className="meta-secondary">#{topic}</span>
               <span className="meta-secondary">by {author}</span>
               <span className="meta-secondary">{formatDate(created_at)}</span>

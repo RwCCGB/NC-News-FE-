@@ -1,5 +1,3 @@
-const base = import.meta.env.VITE_API_BASE
-
 export async function getArticles(){
     const result = await fetch('/api/articles')
     if(!result.ok){
@@ -32,7 +30,7 @@ export async function getCommentsByArticleId(article_id){
 
 export async function postCommentByArticleId(article_id, comment){
     let dataToJson = JSON.stringify(comment)
-    const result = await fetch(`/api/articles/${article_id}/comments`, 
+    const result = await fetch(`/api/articles/${article_id}`, 
             {
                 method: "POST",
                 headers: {"Content-Type" : "application/json"},
@@ -46,3 +44,21 @@ export async function postCommentByArticleId(article_id, comment){
     const data = await result.json()
     return data.comment
 }
+
+export async function patchArticleVotesById(article_id, inc_votes){
+    
+    const result = await fetch(`/api/articles/${article_id}`, {
+        method: "PATCH",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify({inc_votes: Number(inc_votes)})
+    })
+
+    if(!result.ok){
+        const {msg} = await result.json().catch(()=>({msg: `Error ${result.status}`}))
+        throw new Error(msg)
+    }
+
+    const {article} = await result.json()
+    return article
+}
+
