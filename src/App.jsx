@@ -1,27 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import {NavLink, Route, Routes, Navigate} from "react-router-dom"
-import ArticlesPage from "./Components/ArticlesPage"
+import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import ArticlesPage from "./Components/ArticlesPage";
+import ArticlePage from "./Components/ArticlePage";
+import Homepage from "./Components/Homepage";
+import "./Design/styling.css"
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <header>
-        <nav aria-label='Primary'>
-          <NavLink to="/articles" end>Articles</NavLink>
-        </nav>
-      </header>
-      <Routes>
-        <Route path="/" element={<Navigate to="/articles" replace />}/>
-        <Route path="/articles" element={<ArticlesPage/>}/>
-        <Route path="*" element={<div><p>Page Not Found</p></div>}/>
-      </Routes>
-    </>
-  )
-}
+    <BrowserRouter>
+      <div className="container">
+        <header>
+          <h1 aria-label="App Title">NC News</h1>
+          <nav className="nav" aria-label="Primary">
+            <NavLink className="nav-btn" to="/">Home</NavLink>
+            <NavLink className="nav-btn" to="/articles">Articles</NavLink>
+            <NavLink className="nav-btn" to="/topics">Topics</NavLink>
+          </nav>
+        </header>
 
-export default App
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/articles" element={<ArticlesPage />} />
+          <Route path="/articles/:article_id" element={<ArticlePage />} />
+          <Route
+            path="*"
+            element={
+              <main>
+                <h1>404</h1>
+                <p>Not found. <Link to="/articles">Go to articles</Link></p>
+              </main>
+            }
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}

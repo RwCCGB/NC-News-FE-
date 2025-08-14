@@ -1,48 +1,39 @@
 import { useEffect, useState } from "react";
 import { getArticles } from "../api";
-import ArticleCard from "./ArticleCard"
+import ArticleCard from "./ArticleCard";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState([]);
-  const [status, setStatus] = useState("idle");
-  const [error, setError] = useState(null);
+  const [status, setStatus] = useState("loading");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    let cancelled = false
-    setStatus("loading")
+    setStatus("loading");
     getArticles()
-      .then((data) => {
-        if (!cancelled) {
-          setArticles(data)
-          setStatus("success")
-        }
-      })
-      .catch((e) => {
-        if (!cancelled) {
-          setError(e)
-          setStatus("error")
-        }
-      })
-    return () => { cancelled = true; }
-  }, [])
-
-  if (status === "loading"){
-    return <div className="main"><p>Loading articles…</p></div>
-  }
-  if (status === "error"){
-     return <div className="main"><p role="alert">Error: {error.message}</p></div>
-  }
+      .then(setArticles)
+      .then(() => setStatus("ready"))
+      .catch((err) => {
+        setError(err.message || "Failed to load");
+        setStatus("error");
+      });
+  }, []);
 
   return (
-    <div className="main">
-      <h1>All Articles</h1>
-      <div className="grid" role="list">
-        {articles.map((a) => (
-          <div role="listitem" key={a.article_id}>
-            <ArticleCard article={a} />
-          </div>
-        ))}
-      </div>
-    </div>
+    <section className="articles-page container">
+      <h1>Articles</h1>
+
+      {status === "loading" && <p className="muted">Loading…</p>}
+      {status === "error" && <p className="error">Error: {error}</p>}
+
+      {status === "ready" && (
+        <ul className="articles-grid" role="list">
+          {articles.map((article) => (
+            <li key={article.article_id} className="card article-card">
+              <ArticleCard article={article} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

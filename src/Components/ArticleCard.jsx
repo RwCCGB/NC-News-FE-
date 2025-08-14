@@ -1,38 +1,33 @@
-import { formatDate } from "../Utils/formatDate"
+import { Link } from "react-router-dom";
+import { formatDate } from "../Utils/formatDate";
 
 export default function ArticleCard({ article }) {
-  const {
-    title,
-    author,
-    topic,
-    created_at,
-    votes,
-    comment_count,
-    article_img_url,
-  } = article
+  const { article_id, title, topic, author, created_at, votes, article_img_url, comment_count } = article;
 
   return (
-    <article className="card" aria-labelledby={`title-${article.article_id}`}>
-      <img
-        className="card_img"
-        src={article_img_url}
-        alt={title}
-        loading="lazy"
-      />
-      <div className="card_body">
-        <h3 id={`title-${article.article_id}`} className="card_title">
-          {title}
+    <>
+      <div className="thumb">
+        {article_img_url ? (
+          <img className="article-img" src={article_img_url} alt={`Thumbnail for ${title}`} />
+        ) : null}
+      </div>
+
+      <div className="content">
+        <h3 className="title">
+          <Link to={`/articles/${article_id}`}>{title}</Link>
         </h3>
-        <div className="card_meta">
-          <span aria-label="topic"><a>#{topic}</a></span>
-          <span aria-label="author"> by {author}</span>
+
+        <div className="row">
+          <span className="pill">Votes: {votes ?? 0}</span>
+          <span className="meta-secondary">#{topic}</span>
+          <span className="meta-secondary">by {author}</span>
+          <span className="meta-secondary">{formatDate(created_at)}</span>
         </div>
-        <div className="badges" aria-label="article stats">
-          <p><span className="badge" title="votes">Total Votes: {votes}</span></p>
-          <p><span className="badge" title="comments"> Total Comments: {comment_count}</span></p>
-          <p><span className="badge" title="published">Date Published: {formatDate(created_at)}</span></p>
+
+        <div className="row">
+          <Link className="pill linklike" to={`/articles/${article_id}`}>Comments: {comment_count ?? 0}</Link>
         </div>
       </div>
-    </article>
+    </>
   );
 }
