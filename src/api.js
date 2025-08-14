@@ -75,3 +75,17 @@ export async function deleteCommentById(comment_id){
     }
     return true
 }
+
+export async function getTopics(slug){
+    const result = await fetch(`/api/topics`)
+    if(!result.ok){
+        const {msg} = await result.json().catch(()=>({msg: `Error ${result.status}`}))
+        throw new Error(msg)
+    }
+    const data = await result.json()
+    return data.topics
+}
+
+export async function getArticlesByTopic(slug){
+    const result = await fetch(`/api/topics`)
+} 
