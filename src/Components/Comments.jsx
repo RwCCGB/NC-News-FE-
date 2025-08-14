@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { getCommentsByArticleId, postCommentByArticleId } from "../api";
+import { getCommentsByArticleId, postCommentByArticleId, deleteCommentById } from "../api";
+import {useContext} from "react"
+import { UserContext } from "../Contexts/UserContext";
 
 export default function Comments({ article_id }) {
   const [comments, setComments] = useState([]);
@@ -11,46 +13,77 @@ export default function Comments({ article_id }) {
   const [postStatus, setPostStatus] = useState("idle");
   const [postError, setPostError] = useState("");
 
+  const [deleteComment, setDeleteComment] = useState(new Set())
+
+  const {user} = useContext(UserContext)
+
   useEffect(() => {
     setStatus("loading");
     getCommentsByArticleId(article_id)
       .then(c => {
-        setComments(c || []);
-        setStatus("ready");
+        setComments(c || [])
+        setStatus("ready")
       })
       .catch(err => {
-        setError(err.message || "Failed to load comments");
-        setStatus("error");
+        setError(err.message || "Failed to load comments")
+        setStatus("error")
       });
-  }, [article_id]);
+  }, [article_id])
 
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!newUsername.trim() || !newComment.trim()) {
-      setPostError("Please enter both a username and a comment.");
+      setPostError("Please enter both a username and a comment.")
       return;
     }
 
-    setPostStatus("posting");
-    setPostError("");
+    setPostStatus("posting")
+    setPostError("")
 
     postCommentByArticleId(article_id, {
       username: newUsername.trim(),
       body: newComment.trim()
     })
       .then((createdComment) => {
-        setComments(curr => [createdComment, ...curr]);
-        setNewComment("");
-        setNewUsername("");
-        setPostStatus("success");
+        setComments(curr => [createdComment, ...curr])
+        setNewComment("")
+        setNewUsername("")
+        setPostStatus("success")
       })
       .catch(err => {
-        setPostError(err.message || "Failed to post comment");
+        setPostError(err.message || "Failed to post comment")
         setPostStatus("error");
-      });
-  };
+      })
+  }
+
+  async function handleDelete(comment_id){
+    
+    console.log("delete clicked", comment_id)
+    setError("")
+    const previous = comments
+    setComments(previous.filter((comment) => comment.comment_id !== comment_id))
+    setDeleteComment((set) => new Set(set).add(comment_id))
+
+    try{
+        await deleteCommentById(comment_id)
+    }
+    catch(error){
+        if(error.status !== 204){
+            setComments(previous)
+            setError(error.message || "Failed to delete comment")
+            setStatus("error")
+        }
+    }
+    finally{
+        setDeleteComment((set) => {
+            const copy = new Set(set)
+            copy.delete(comment_id)
+            return copy
+        })
+    }
+  }
 
   return (
     <div>
@@ -86,7 +119,7 @@ export default function Comments({ article_id }) {
                   <strong>{comment.author}</strong> — {new Date(comment.created_at).toLocaleString()}
                 </p>
                 <p className="comment-body">{comment.body}</p>
-                <a>Delete</a>
+                <button disabled={comment.author !== user.username} onClick={()=> handleDelete(comment.comment_id)} >Delete</button>
               </li>
             ))}
           </ul>

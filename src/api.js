@@ -30,7 +30,7 @@ export async function getCommentsByArticleId(article_id){
 
 export async function postCommentByArticleId(article_id, comment){
     let dataToJson = JSON.stringify(comment)
-    const result = await fetch(`/api/articles/${article_id}`, 
+    const result = await fetch(`/api/articles/${article_id}/comments`, 
             {
                 method: "POST",
                 headers: {"Content-Type" : "application/json"},
@@ -62,3 +62,16 @@ export async function patchArticleVotesById(article_id, inc_votes){
     return article
 }
 
+export async function deleteCommentById(comment_id){
+    const result = await fetch(`/api/comments/${comment_id}`, {
+        method: "DELETE",
+    })
+
+    let message = ""
+    if(!result.ok){
+        const {msg} = await result.json().catch(()=>({msg: `Error ${result.status}`}))
+        message = `Error ${result.status}`
+        throw new Error(msg)
+    }
+    return true
+}
