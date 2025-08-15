@@ -1,5 +1,17 @@
-export async function getArticles(){
-    const result = await fetch('/api/articles')
+export async function getArticles(options = {}){
+    const params = new URLSearchParams()
+    if(options.topic){
+        params.set("topic", options.topic)
+    }
+    if(options.sort_by){
+        params.set("sort_by", options.sort_by)
+    }
+    if(options.order){
+        params.set("order", options.order)
+    }
+    const stringParameters = params.toString()
+    const apiUrl = `/api/articles${stringParameters ? `?${stringParameters}` : ""}`
+    const result = await fetch(apiUrl)
     if(!result.ok){
         const {msg} = await result.json().catch(()=>({msg: `Error ${result.status}`}))
         throw new Error(msg)

@@ -315,3 +315,25 @@
   }
   .card { background: var(--panel); border: 1px solid var(--border); }
   .nav a { color: var(--text); }
+
+  .list-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .sort-controls {
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+  }
+  
+  .sort-label select {
+    padding: .4rem .6rem;
+    border-radius: 8px;
+    border: 1px solid var(--border, #ddd);
+    background: var(--card-bg, #fff);
+  }
+  
