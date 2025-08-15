@@ -96,11 +96,7 @@
     border-radius: 12px;
     object-fit: cover;
   }
-  
-  /* =========================================
-     ARTICLES LIST PAGE
-     ========================================= */
-  
+
   .articles-page{
     padding: 20px;
   }
@@ -144,10 +140,6 @@
     display:flex; align-items:center; flex-wrap: wrap; gap:10px;
   }
   
-  /* =========================================
-     SINGLE ARTICLE PAGE
-     ========================================= */
-  
   .article-page{
     padding: 20px;
   }
@@ -182,13 +174,9 @@
     padding: 0 18px 12px;
     display:flex; gap: 10px; align-items:center; flex-wrap: wrap;
   }
-  
-  /* =========================================
-     COMMENTS SECTION (on Article page)
-     ========================================= */
-  
+
   .comments-section{
-    padding: 14px;
+    flex-basis: 100%;
   }
   
   .comments-section h2{
@@ -214,11 +202,7 @@
   .comment-body{
     margin: 0;
   }
-  
-  /* =========================================
-     RESPONSIVE (≥ 900px)
-     ========================================= */
-  
+
   @media (min-width: 900px){
     .articles-grid{
       grid-template-columns: 1fr 1fr;
@@ -234,10 +218,7 @@
       font-size: 1.06rem;
     }
   }
-  
-  /* =========================================
-     Optional dark mode (auto)
-     ========================================= */
+
   @media (prefers-color-scheme: dark){
     :root{
       --bg: #0b1220;
@@ -253,7 +234,6 @@
   }
   img { max-width: 100%; height: auto; display: block; }
 
-  /* Layout for the single-article view */
   .article-page .article-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -274,16 +254,11 @@
     display: flex; gap: 12px; align-items: center;
     padding: 0 18px 18px;
   }
-  
-  /* Comments card */
   .comments-section { padding: 18px; }
-  
-  /* --- LIST PAGE ONLY (scoped) --- */
   .articles-grid { display: grid; gap: 16px; }
   @media (min-width: 720px) { .articles-grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1100px){ .articles-grid { grid-template-columns: 1fr 1fr 1fr; } }
-  
-  /* These rules apply ONLY to cards inside the list grid */
+
   .articles-grid .article-card {
     display: grid;
     grid-template-columns: 120px 1fr;
@@ -299,8 +274,7 @@
   }
   .articles-grid .article-card .title { margin: 0 0 6px; font-size: 1.1rem; line-height: 1.2; }
   .articles-grid .article-card .row { display: flex; gap: 8px; flex-wrap: wrap; }
-  
-  /* Pills / meta (shared) */
+
   .pill {
     display: inline-block;
     padding: 4px 10px;
@@ -312,12 +286,11 @@
   .linklike { cursor: pointer; text-decoration: none; }
   
   .app {
-    min-height: 100vh; /* so background covers full screen */
+    min-height: 100vh; 
     background: var(--bg);
     color: var(--text);
   }
   
-  /* dark mode overrides */
   .app.theme-dark {
     --bg: #0b1220;
     --panel: #111827;
@@ -326,7 +299,5 @@
     --border: #1f2937;
     --accent: #60a5fa;
   }
-  
-  /* example usage */
   .card { background: var(--panel); border: 1px solid var(--border); }
   .nav a { color: var(--text); }

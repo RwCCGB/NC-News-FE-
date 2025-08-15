@@ -89,12 +89,11 @@ export default function ArticlePage() {
             </button>
             <Link to="/articles" className="meta-secondary">← Back to list</Link>
           </div>
-        </article>
-
-        <aside className="card comments-section" aria-live="polite">
+          <aside className="card comments-section" aria-live="polite">
           <h2>Comments</h2>
           {showComments ? <Comments article_id={article_id} /> : <p className="muted">Comments are hidden.</p>}
         </aside>
+        </article>
       </div>
     </section>
   );

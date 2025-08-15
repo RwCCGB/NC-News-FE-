@@ -87,5 +87,11 @@ export async function getTopics(slug){
 }
 
 export async function getArticlesByTopic(slug){
-    const result = await fetch(`/api/topics`)
+    const result = await fetch(`/api/articles?topic=${encodeURIComponent(slug)}`)
+    if(!result.ok){
+        const {msg} = await result.json().catch(()=>({msg: `Error ${result.status}`}))
+        throw new Error(msg)
+    }
+    const data = await result.json()
+    return data.articles
 } 
