@@ -67,7 +67,7 @@ export default function ArticlePage() {
                 <button onClick={()=> handleVoteChange(1)} disabled={isVoting}>👍 +</button>
                 <button onClick={()=> handleVoteChange(-1)} disabled={isVoting}>👎 -</button>
               </span>
-              <span className="meta-secondary">#{topic}</span>
+              <span className="meta-secondary">#<Link to={`/topics/${topic}`}>{topic}</Link></span>
               <span className="meta-secondary">by {author}</span>
               <span className="meta-secondary">{formatDate(created_at)}</span>
             </div>
