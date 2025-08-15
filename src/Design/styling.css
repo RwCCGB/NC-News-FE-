@@ -203,6 +203,22 @@
     margin: 0;
   }
 
+  .comment-username{
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid grey;
+  }
+
+  .comment-textarea{
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid grey;
+    resize: vertical;
+  }
+
   @media (min-width: 900px){
     .articles-grid{
       grid-template-columns: 1fr 1fr;

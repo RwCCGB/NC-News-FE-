@@ -70,11 +70,9 @@ export default function Comments({ article_id }) {
         await deleteCommentById(comment_id)
     }
     catch(error){
-        if(error.status !== 204){
-            setComments(previous)
-            setError(error.message || "Failed to delete comment")
-            setStatus("error")
-        }
+        setComments(previous)
+        setError(error.message || "Failed to delete comment")
+        setStatus("error")
     }
     finally{
         setDeleteComment((set) => {
@@ -100,12 +98,13 @@ export default function Comments({ article_id }) {
               onChange={(e) => setNewUsername(e.target.value)}
               className="comment-input"
             />
-            <textarea
+            <p><textarea
               placeholder="Your comment"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               className="comment-textarea"
             />
+            </p>
             <button type="submit" className="commentButton" disabled={postStatus === "posting"}>
               {postStatus === "posting" ? "Posting..." : "Post Comment"}
             </button>
